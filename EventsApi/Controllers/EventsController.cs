@@ -34,9 +34,16 @@ public class EventsController(IEventsService eventsService) : ControllerBase
     }
     
     [HttpPost("")]
-    public async Task<ActionResult<Event>> AddEvent(Event postEvent)
+    public async Task<ActionResult<Event>> AddEvent(AddEventDto eventData)
     {
-        var eventResponse = await eventsService.AddEvent(postEvent);
+        var newEvent = new Event {
+            Title = eventData.Title,
+            Description = eventData.Description,
+            StartDate = eventData.StartDate,
+            EndDate = eventData.EndDate
+        };
+        
+        var eventResponse = await eventsService.AddEvent(newEvent);
 
         if (eventResponse == null) {
             return BadRequest("Event not added");      
