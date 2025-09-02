@@ -1,6 +1,7 @@
 using EventsApi.Dto;
 using EventsApi.Entities;
 using EventsApi.Interfaces;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EventsApi.Controllers;
@@ -21,6 +22,7 @@ public class EventsController(IEventsService eventsService) : ControllerBase
         return Ok(eventById);
     }
     
+    [EnableCors("_myAllowSpecificOrigins")]
     [HttpGet("")]
     public async Task<ActionResult<GetEventsResponseDto>> GetEvents()
     {
