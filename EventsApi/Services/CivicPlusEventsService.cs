@@ -1,3 +1,4 @@
+using System.Web;
 using EventsApi.Dto;
 using EventsApi.Entities;
 using EventsApi.Interfaces;
@@ -25,12 +26,20 @@ public class CivicPlusEventsService(IConfiguration configuration, IAuthService a
         return null;
     }
     
-    public async Task<GetEventsResponseDto?> GetEvents()
+    public async Task<GetEventsResponseDto?> GetEvents(int skip = 0, int top = 10)
     {
         var client = _httpClientFactory.CreateClient();
         client.DefaultRequestHeaders.Add("Authorization", "Bearer " + await authService.GetToken());
         
-        var response = await client.GetAsync(GetApiUrl() + "Events");
+        var builder = new UriBuilder(GetApiUrl() + "Events");
+        var query = HttpUtility.ParseQueryString("");
+        query["$skip"] = skip.ToString();
+        query["$top"] = top.ToString();
+
+        builder.Query = query.ToString();
+        var uir = builder.ToString();
+        
+        var response = await client.GetAsync(builder.ToString());
         response.EnsureSuccessStatusCode();
         if (response.IsSuccessStatusCode) {
             var responseContent = await response.Content.ReadFromJsonAsync<GetEventsResponseDto>();

@@ -13,9 +13,9 @@ class EventApiProvider {
             },
         }
 
-        const skip = (page - 1) * 20 // using the default;
+        const skip = (page - 1) * 10 // using the default;
         
-        const response = await fetch(this.baseApi + 'events?$skip=' + skip, options);
+        const response = await fetch(this.baseApi + 'events?skip=' + skip, options);
         const json = response?.json();
 
         // total, array items

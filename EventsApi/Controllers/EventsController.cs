@@ -22,11 +22,10 @@ public class EventsController(IEventsService eventsService) : ControllerBase
         return Ok(eventById);
     }
     
-    [EnableCors("_myAllowSpecificOrigins")]
     [HttpGet("")]
-    public async Task<ActionResult<GetEventsResponseDto>> GetEvents()
+    public async Task<ActionResult<GetEventsResponseDto>> GetEvents(int skip = 0)
     {
-        var events = await eventsService.GetEvents();
+        var events = await eventsService.GetEvents(skip);
 
         if (events == null) {
             return BadRequest("No events found");       

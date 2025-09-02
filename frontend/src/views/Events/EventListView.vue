@@ -20,11 +20,11 @@ const total = ref(0);
 const page = ref(0);
 
 const pages = computed(() => {
-  return Math.ceil(total.value / 20); // using the default take
+  return Math.ceil(total.value / 10); // using the default take
 });
 
 const showPagination = computed(() => {
-  return total.value > 20;
+  return total.value > 10;
 })
 
 onMounted(() => {
