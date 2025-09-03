@@ -37,7 +37,6 @@ public class CivicPlusEventsService(IConfiguration configuration, IAuthService a
         query["$top"] = top.ToString();
 
         builder.Query = query.ToString();
-        var uir = builder.ToString();
         
         var response = await client.GetAsync(builder.ToString());
         response.EnsureSuccessStatusCode();

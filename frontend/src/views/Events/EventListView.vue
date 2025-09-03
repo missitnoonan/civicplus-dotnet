@@ -16,15 +16,17 @@ const route = useRoute();
 const events = ref([]);
 const hasLoaded = ref(false);
 
+const pageSize = import.meta.env.VITE_DEFAULT_PAGE_SIZE;
+
 const total = ref(0);
 const page = ref(0);
 
 const pages = computed(() => {
-  return Math.ceil(total.value / 10); // using the default take
+  return Math.ceil(total.value / pageSize); // using the default take
 });
 
 const showPagination = computed(() => {
-  return total.value > 10;
+  return total.value > pageSize;
 })
 
 onMounted(() => {

@@ -6,6 +6,10 @@ namespace EventsApi.Services;
 
 public class CivicPlusAuthService(IConfiguration configuration, IMemoryCache cache) : IAuthService
 {
+    private const string TokenCacheKey = "token";
+    private const string TokenExpiresAtCacheKey = "tokenExpiresAt";
+    private const string TokenDuration = "tokenDuration";
+    
     public async Task<string?> GetToken()
     {
         var cachedToken = GetTokenFromCache();
@@ -27,8 +31,7 @@ public class CivicPlusAuthService(IConfiguration configuration, IMemoryCache cac
         if (response.IsSuccessStatusCode) {
             var responseContent = await response.Content.ReadFromJsonAsync<AuthResponseDto>();
             if (responseContent != null) {
-                cache.Set("access_token", responseContent.access_token);
-                cache.Set("expires_at", DateTimeOffset.UtcNow.ToUnixTimeSeconds() + responseContent.expires_in);
+                SetTokenInCache(responseContent.access_token, responseContent.expires_in);
             
                 return responseContent.access_token;
             }
@@ -37,15 +40,25 @@ public class CivicPlusAuthService(IConfiguration configuration, IMemoryCache cac
         throw new HttpRequestException();
     }
     
-    private string? GetTokenFromCache()
+    internal string? GetTokenFromCache()
     {
-        var expiresAt = cache.Get<long>("expires_at");
-        var plusOneWeek = DateTimeOffset.UtcNow.ToUnixTimeSeconds() + (24 * 60 * 60 * 7);
+        var expiresAt = cache.Get<long>(TokenExpiresAtCacheKey);
+        var duration = cache.Get<int>(TokenDuration);
+        var now = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+        var plusHalfExpiresIn = now + (duration / 2);
+        var test = expiresAt - plusHalfExpiresIn;
         
-        if (expiresAt != 0 && plusOneWeek < expiresAt) {
-            return cache.Get<string>("access_token");
+        if (expiresAt != 0 && plusHalfExpiresIn < expiresAt) {
+            return cache.Get<string>(TokenCacheKey);
         }
         
         return null;
+    }
+
+    internal void SetTokenInCache(string token, int expiresIn)
+    {
+        cache.Set(TokenCacheKey, token);
+        cache.Set(TokenDuration, expiresIn);
+        cache.Set(TokenExpiresAtCacheKey, DateTimeOffset.UtcNow.ToUnixTimeSeconds() + expiresIn);
     }
 }

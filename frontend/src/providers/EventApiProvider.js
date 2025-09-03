@@ -1,9 +1,10 @@
 class EventApiProvider {
     constructor() {
         this.baseApi = import.meta.env.VITE_EVENT_BASE_URL;
+        this.defaultPageSize = import.meta.env.VITE_DEFAULT_PAGE_SIZE;
     }
 
-    async getEventList(page = 1) {
+    async getEventList(page = 1, pageSize = this.defaultPageSize) {
         const options = {
             method: 'GET',
             mode: 'cors',
@@ -13,7 +14,7 @@ class EventApiProvider {
             },
         }
 
-        const skip = (page - 1) * 10 // using the default;
+        const skip = (page - 1) * pageSize // using the default;
         
         const response = await fetch(this.baseApi + 'events?skip=' + skip, options);
         const json = response?.json();
