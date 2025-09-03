@@ -18,12 +18,19 @@ public class CivicPlusAuthService(IConfiguration configuration, IMemoryCache cac
         }
         
         var client = new HttpClient();
+        var baseUrl = configuration["EventsApi:ApiBaseUrl"];
+        var clientId = configuration["EventsApi:ClientId"];
+        var clientSecret = configuration["EventsApi:ClientSecret"];
+
+        if (string.IsNullOrEmpty(baseUrl) || string.IsNullOrEmpty(clientId) || string.IsNullOrEmpty(clientSecret)) {
+            throw new BadHttpRequestException("Missing configuration for CivicPlus API");
+        }
         
-        var authUrl = configuration["EventsApi:ApiBaseUrl"] + configuration["EventsApi:ClientId"] + "/api/auth";
+        var authUrl = baseUrl + clientId + "/api/auth";
 
         var jsonData = new {
-            clientId = configuration["EventsApi:ClientId"],
-            clientSecret = configuration["EventsApi:ClientSecret"]
+            clientId,
+            clientSecret,
         };
 
         var response = await client.PostAsJsonAsync(authUrl, jsonData);

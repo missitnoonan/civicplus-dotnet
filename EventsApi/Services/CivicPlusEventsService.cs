@@ -12,8 +12,7 @@ public class CivicPlusEventsService(IConfiguration configuration, IAuthService a
     
     public async Task<Event?> GetEvent(string id)
     {
-        var client = _httpClientFactory.CreateClient();
-        client.DefaultRequestHeaders.Add("Authorization", "Bearer " + await authService.GetToken());
+        var client = await GetClient();
         
         var response = await client.GetAsync(GetApiUrl() + "Events/" + id);
 
@@ -28,8 +27,7 @@ public class CivicPlusEventsService(IConfiguration configuration, IAuthService a
     
     public async Task<GetEventsResponseDto?> GetEvents(int skip = 0, int top = 10)
     {
-        var client = _httpClientFactory.CreateClient();
-        client.DefaultRequestHeaders.Add("Authorization", "Bearer " + await authService.GetToken());
+        var client = await GetClient();
         
         var builder = new UriBuilder(GetApiUrl() + "Events");
         var query = HttpUtility.ParseQueryString("");
@@ -51,8 +49,7 @@ public class CivicPlusEventsService(IConfiguration configuration, IAuthService a
 
     public async Task<Event?> AddEvent(Event eventDto)
     {
-        var client = _httpClientFactory.CreateClient();
-        client.DefaultRequestHeaders.Add("Authorization", "Bearer " + await authService.GetToken());
+        var client = await GetClient();
         
         var response = await client.PostAsJsonAsync(GetApiUrl() + "Events", eventDto);
         response.EnsureSuccessStatusCode();
@@ -65,8 +62,22 @@ public class CivicPlusEventsService(IConfiguration configuration, IAuthService a
         return null;
     }
 
+    private async Task<HttpClient> GetClient()
+    {
+        var client = _httpClientFactory.CreateClient();
+        client.DefaultRequestHeaders.Add("Authorization", "Bearer " + await authService.GetToken());
+        
+        return client;   
+    }
+
     public string GetApiUrl()
     {
-        return _configuration["EventsApi:ApiBaseUrl"] + _configuration["EventsApi:ClientId"] + "/api/";
+        var baseUrl = _configuration["EventsApi:ApiBaseUrl"];
+        var clientId = _configuration["EventsApi:ClientId"];
+        if (string.IsNullOrEmpty(baseUrl) || string.IsNullOrEmpty(clientId)) {
+            throw new BadHttpRequestException("Missing configuration for CivicPlus API");       
+        }
+        
+        return baseUrl + clientId + "/api/";
     }
 }

@@ -13,7 +13,7 @@ builder.Services.AddScoped<IAuthService, CivicPlusAuthService>();
 builder.Services.AddMemoryCache();
 builder.Services.AddHttpClient();
 
-var hosts = builder.Configuration["FrontEndUrl"];
+var hosts = builder.Configuration["FrontEndUrl"] ?? "*";
 builder.Services.AddCors(options => options.AddDefaultPolicy(policy =>
 {
     policy.WithOrigins(hosts)

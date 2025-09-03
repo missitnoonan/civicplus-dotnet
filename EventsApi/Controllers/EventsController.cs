@@ -23,9 +23,9 @@ public class EventsController(IEventsService eventsService) : ControllerBase
     }
     
     [HttpGet("")]
-    public async Task<ActionResult<GetEventsResponseDto>> GetEvents(int skip = 0)
+    public async Task<ActionResult<GetEventsResponseDto>> GetEvents(int skip = 0, int top = 10)
     {
-        var events = await eventsService.GetEvents(skip);
+        var events = await eventsService.GetEvents(skip, top);
 
         if (events == null) {
             return BadRequest("No events found");       
