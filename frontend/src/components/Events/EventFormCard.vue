@@ -72,7 +72,17 @@ function validate() {
   if (!endDate.value) {
     hasErrors.value = true;
     errors.value.endDate = 'End Date Is Required'
+  } else if (startDate.value && endDate.value) {
+      const startDateValue = new Date(startDate.value);
+      const endDateValue = new Date(endDate.value);
+  
+      if (startDateValue > endDateValue) {
+        hasErrors.value = true;
+        errors.value.endDate = 'End Date Must Be After Start Date'
+      }
   }
+  
+  
 }
 
 function formatDate(value) {
