@@ -25,3 +25,7 @@
 ### Running tests for backend
 * From the root `cd EventsApiTest`
   * `dotnet test`
+
+### Running tests for frontend
+* From the root `cd frontend`
+  * `npm run test:unit`
