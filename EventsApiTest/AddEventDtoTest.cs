@@ -36,7 +36,7 @@ public class AddEventDtoTest
         var validations = ValidateModel(dto);
 
         Assert.NotEmpty(validations);
-        Assert.Contains(validations, x => x.ErrorMessage == "Invalid date format");
+        Assert.Contains(validations, x => x.ErrorMessage == "The EndDate field is not a valid date.");
     }
 
     // stolen from https://stackoverflow.com/questions/2167811/unit-testing-asp-net-dataannotations-validation

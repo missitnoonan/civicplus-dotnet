@@ -2,14 +2,16 @@
 
 ### Built Using
 * .Net 9
-* Node 24.7.0
-  * You can delete the node_modules folder and run npm install to use a different version
+* Node 24.7.0 (should be ok with relatively new versions)
+
+### Installing
+* Clone the repo `git clone git@github.com:missitnoonan/civicplus-dotnet.git`
 
 ### Running dev servers
 * From the root `cd EventsApi`
   * `dotnet run`
 * In a separate terminal, from the root `cd frontend`
-  * `npm run dev` 
+  * `npm install` && `npm run dev` 
 
 ### Using the App
 * Navigate to http://localhost:3001/
@@ -19,3 +21,7 @@
 * Click on the "Create New Event" button to create a new event
   * There is basic js validation, but no handling of server errors
 * Click on the "View Details" link on any event card to enter the details view
+
+### Running tests for backend
+* From the root `cd EventsApiTest`
+  * `dotnet test`
