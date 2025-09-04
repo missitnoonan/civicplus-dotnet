@@ -18,6 +18,7 @@ public class CivicPlusAuthService(IConfiguration configuration, IMemoryCache cac
         }
         
         var client = new HttpClient();
+        client.DefaultRequestHeaders.Add("Accept", "application/json");
         var baseUrl = configuration["EventsApi:ApiBaseUrl"];
         var clientId = configuration["EventsApi:ClientId"];
         var clientSecret = configuration["EventsApi:ClientSecret"];

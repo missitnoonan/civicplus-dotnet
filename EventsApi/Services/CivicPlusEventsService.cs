@@ -77,6 +77,7 @@ public class CivicPlusEventsService(IConfiguration configuration, IAuthService a
     {
         var client = _httpClientFactory.CreateClient();
         client.DefaultRequestHeaders.Add("Authorization", "Bearer " + await authService.GetToken());
+        client.DefaultRequestHeaders.Add("Accept", "application/json");
         
         return client;   
     }

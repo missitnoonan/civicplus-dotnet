@@ -29,3 +29,8 @@
 ### Running tests for frontend
 * From the root `cd frontend`
   * `npm run test:unit`
+
+### What is missing
+* Logging on the backend
+* Notifications on the frontend
+* Better backend validation (checking if end date is after start date)
