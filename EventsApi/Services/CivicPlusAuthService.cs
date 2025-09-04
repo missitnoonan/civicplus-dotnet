@@ -23,7 +23,7 @@ public class CivicPlusAuthService(IConfiguration configuration, IMemoryCache cac
         var clientSecret = configuration["EventsApi:ClientSecret"];
 
         if (string.IsNullOrEmpty(baseUrl) || string.IsNullOrEmpty(clientId) || string.IsNullOrEmpty(clientSecret)) {
-            throw new BadHttpRequestException("Missing configuration for CivicPlus API");
+            throw new SystemException("Missing configuration for CivicPlus API");
         }
         
         var authUrl = baseUrl + clientId + "/api/auth";
@@ -44,16 +44,15 @@ public class CivicPlusAuthService(IConfiguration configuration, IMemoryCache cac
             }
         }
         
-        throw new HttpRequestException();
+        throw new SystemException("Failed to get token from CivicPlus API");
     }
     
-    internal string? GetTokenFromCache()
+    internal string? GetTokenFromCache() // internal for testing
     {
         var expiresAt = cache.Get<long>(TokenExpiresAtCacheKey);
         var duration = cache.Get<int>(TokenDuration);
         var now = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
         var plusHalfExpiresIn = now + (duration / 2);
-        var test = expiresAt - plusHalfExpiresIn;
         
         if (expiresAt != 0 && plusHalfExpiresIn < expiresAt) {
             return cache.Get<string>(TokenCacheKey);
@@ -62,7 +61,7 @@ public class CivicPlusAuthService(IConfiguration configuration, IMemoryCache cac
         return null;
     }
 
-    internal void SetTokenInCache(string token, int expiresIn)
+    internal void SetTokenInCache(string token, int expiresIn) // internal for testing
     {
         cache.Set(TokenCacheKey, token);
         cache.Set(TokenDuration, expiresIn);

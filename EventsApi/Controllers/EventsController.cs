@@ -1,7 +1,6 @@
 using EventsApi.Dto;
 using EventsApi.Entities;
 using EventsApi.Interfaces;
-using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EventsApi.Controllers;
@@ -25,13 +24,13 @@ public class EventsController(IEventsService eventsService) : ControllerBase
     [HttpGet("")]
     public async Task<ActionResult<GetEventsResponseDto>> GetEvents(int skip = 0, int top = 10)
     {
-        var events = await eventsService.GetEvents(skip, top);
+        var eventsResponse = await eventsService.GetEvents(skip, top);
 
-        if (events == null) {
+        if (eventsResponse == null) {
             return BadRequest("No events found");       
         }
         
-        return Ok(events);
+        return Ok(eventsResponse);
     }
     
     [HttpPost("")]

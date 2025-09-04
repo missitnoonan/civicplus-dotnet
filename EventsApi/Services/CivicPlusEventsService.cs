@@ -62,22 +62,22 @@ public class CivicPlusEventsService(IConfiguration configuration, IAuthService a
         return null;
     }
 
+    private string GetApiUrl()
+    {
+        var baseUrl = _configuration["EventsApi:ApiBaseUrl"];
+        var clientId = _configuration["EventsApi:ClientId"];
+        if (string.IsNullOrEmpty(baseUrl) || string.IsNullOrEmpty(clientId)) {
+            throw new SystemException();
+        }
+        
+        return baseUrl + clientId + "/api/";
+    }
+    
     private async Task<HttpClient> GetClient()
     {
         var client = _httpClientFactory.CreateClient();
         client.DefaultRequestHeaders.Add("Authorization", "Bearer " + await authService.GetToken());
         
         return client;   
-    }
-
-    public string GetApiUrl()
-    {
-        var baseUrl = _configuration["EventsApi:ApiBaseUrl"];
-        var clientId = _configuration["EventsApi:ClientId"];
-        if (string.IsNullOrEmpty(baseUrl) || string.IsNullOrEmpty(clientId)) {
-            throw new BadHttpRequestException("Missing configuration for CivicPlus API");       
-        }
-        
-        return baseUrl + clientId + "/api/";
     }
 }
