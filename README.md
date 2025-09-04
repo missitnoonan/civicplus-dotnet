@@ -31,6 +31,7 @@
   * `npm run test:unit`
 
 ### What is missing
+* Frontend caching of events to reduce calls
 * Logging on the backend
 * Notifications on the frontend
 * Better backend validation (checking if end date is after start date)

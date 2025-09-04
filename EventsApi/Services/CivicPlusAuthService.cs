@@ -13,7 +13,7 @@ public class CivicPlusAuthService(IConfiguration configuration, IMemoryCache cac
     public async Task<string?> GetToken()
     {
         var cachedToken = GetTokenFromCache();
-        if (cachedToken != null) {
+        if (!string.IsNullOrEmpty(cachedToken)) {
             return cachedToken;       
         }
         
