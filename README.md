@@ -30,7 +30,8 @@
 * From the root `cd frontend`
   * `npm run test:unit`
 
-### What is missing
+### What is missing / not the best
+* API creds in repo (to make it easier to run locally)
 * Frontend caching of events to reduce calls
 * Logging on the backend
 * Notifications on the frontend
